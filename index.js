@@ -5,22 +5,19 @@ const userRoutes = require("./routes/userRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
+const cors = require("cors");
+
 const path = require("path");
 
 dotenv.config();
 connectDB();
 const app = express();
-
+app.use(cors()); //
 app.use(express.json()); // to accept json data
-
-// app.get("/", (req, res) => {
-//   res.send("API Running!");
-// });
 
 app.use("/api/user", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);
-
 
 // Error Handling middlewares
 app.use(notFound);
@@ -34,11 +31,7 @@ const server = app.listen(
 );
 
 const io = require("socket.io")(server, {
-  pingTimeout: 60000,
-  cors: {
-    origin: "http://localhost:3000",
-    // credentials: true,
-  },
+  pingTimeout: 60000
 });
 
 io.on("connection", (socket) => {
